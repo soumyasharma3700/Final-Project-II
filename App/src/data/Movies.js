@@ -1,72 +1,61 @@
-const palette = {
-  "Sci-Fi": ["#00c030", "#1b4d89"],
-  Drama: ["#f5b942", "#2f3542"],
-  Thriller: ["#ff5c5c", "#243447"],
-  Action: ["#ff9f1c", "#18212b"],
-  Mystery: ["#9b5de5", "#18202a"],
-  Anime: ["#00bbf9", "#3a0ca3"],
-  Adventure: ["#2ec4b6", "#264653"],
-  Crime: ["#d90429", "#252422"],
-  Fantasy: ["#80ed99", "#3c1642"],
-  Romance: ["#ff6b9d", "#312244"],
-  Horror: ["#e63946", "#111111"],
-  Biography: ["#ffd166", "#073b4c"],
-};
+const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
+const TMDB_BACKDROP = "https://image.tmdb.org/t/p/w1280";
 
-const svgDataUri = (svg) =>
-  `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 
-const poster = (title, genre, index) => {
-  const [accent, deep] = palette[genre] || palette.Drama;
-  return svgDataUri(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="640" height="960" viewBox="0 0 640 960">
-      <defs>
-        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stop-color="${deep}"/>
-          <stop offset="1" stop-color="${accent}"/>
-        </linearGradient>
-        <radialGradient id="r" cx="50%" cy="25%" r="75%">
-          <stop offset="0" stop-color="#ffffff" stop-opacity=".24"/>
-          <stop offset=".42" stop-color="${accent}" stop-opacity=".16"/>
-          <stop offset="1" stop-color="#000000" stop-opacity=".36"/>
-        </radialGradient>
-      </defs>
-      <rect width="640" height="960" fill="#14181c"/>
-      <rect x="24" y="24" width="592" height="912" rx="34" fill="url(#g)"/>
-      <rect x="24" y="24" width="592" height="912" rx="34" fill="url(#r)"/>
-      <circle cx="${120 + (index % 7) * 58}" cy="${160 + (index % 5) * 42}" r="${78 + (index % 4) * 16}" fill="#fff" opacity=".11"/>
-      <path d="M70 695 C170 620 260 760 376 675 S535 640 590 724 V936 H70 Z" fill="#000" opacity=".24"/>
-      <text x="70" y="102" fill="#dfe7ef" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="2">${genre.toUpperCase()}</text>
-      <foreignObject x="68" y="604" width="504" height="210">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial,Helvetica,sans-serif;color:white;font-size:58px;font-weight:800;line-height:1.02;letter-spacing:0;text-shadow:0 12px 30px rgba(0,0,0,.35)">${title}</div>
-      </foreignObject>
-      <rect x="70" y="838" width="112" height="10" rx="5" fill="#fff" opacity=".7"/>
-      <rect x="196" y="838" width="78" height="10" rx="5" fill="#fff" opacity=".38"/>
-    </svg>
-  `);
-};
-
-const banner = (title, genre, index) => {
-  const [accent, deep] = palette[genre] || palette.Drama;
-  return svgDataUri(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="720" viewBox="0 0 1600 720">
-      <defs>
-        <linearGradient id="bg" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stop-color="#0b0f13"/>
-          <stop offset=".46" stop-color="${deep}"/>
-          <stop offset="1" stop-color="${accent}"/>
-        </linearGradient>
-      </defs>
-      <rect width="1600" height="720" fill="url(#bg)"/>
-      <circle cx="${980 + (index % 6) * 60}" cy="${125 + (index % 4) * 54}" r="230" fill="#fff" opacity=".08"/>
-      <circle cx="${1260 - (index % 4) * 70}" cy="520" r="310" fill="#000" opacity=".2"/>
-      <path d="M0 520 C240 410 390 585 610 486 S970 382 1190 510 1450 590 1600 470 V720 H0 Z" fill="#000" opacity=".34"/>
-      <text x="92" y="148" fill="${accent}" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800" letter-spacing="4">${genre.toUpperCase()}</text>
-      <foreignObject x="90" y="210" width="930" height="230">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial,Helvetica,sans-serif;color:white;font-size:92px;font-weight:900;line-height:.98;letter-spacing:0">${title}</div>
-      </foreignObject>
-    </svg>
-  `);
+const tmdbImages = {
+  "interstellar":           { poster: "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", backdrop: "/xu9zaAevzQ5nnrsXN6JcahLnG4i.jpg" },
+  "inception":              { poster: "/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg", backdrop: "/s3TBrRGB1iav7gFOCNx3H31MoES.jpg" },
+  "the-prestige":           { poster: "/5MXyQfz8xUP3dIFPTubhTsbFY6N.jpg", backdrop: "/y5Ba2tCKTdSwcnKjGpIgdmMHbN3.jpg" },
+  "whiplash":               { poster: "/7fn624j5lj3xTme2SgiLCeuedmO.jpg", backdrop: "/fRGxZuo7jJUWQsVg9PREb98Aclp.jpg" },
+  "avatar":                 { poster: "/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg", backdrop: "/o0s4XsEDfDlvit5pDRKjzXR4pp2.jpg" },
+  "oppenheimer":            { poster: "/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg", backdrop: "/fm6KqXpk3M2HVveHwCrBSSBaO0V.jpg" },
+  "dune":                   { poster: "/d5NXSklpcKqZMSzDKgDAnB87T6v.jpg", backdrop: "/iopYFB1b6Bh7FWZh3onQhph1sih.jpg" },
+  "parasite":               { poster: "/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg", backdrop: "/TU9NIjwzjoKPwQHoHshkFcQUCG.jpg" },
+  "the-dark-knight":        { poster: "/qJ2tW6WMUDux911r6m7haRef0WH.jpg", backdrop: "/hkBaDkMWbLaf8B1lsWsKX7Ew3Xq.jpg" },
+  "joker":                  { poster: "/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg", backdrop: "/n6bUvigpRFqSwmPp1m2YADdbRBc.jpg" },
+  "fight-club":             { poster: "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg", backdrop: "/rr7E0NoGKxvbkb89eR1GwfoYjpA.jpg" },
+  "the-matrix":             { poster: "/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg", backdrop: "/fNG7i7RqMErkcqhohV2a6cV1Ehy.jpg" },
+  "shawshank-redemption":   { poster: "/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg", backdrop: "/iNh3BivHyg5sQRPP1KOkzguEX0H.jpg" },
+  "your-name":              { poster: "/q719jXXEzOoYaps6babgKnONONX.jpg", backdrop: "/mMtUybQ6hL24FXo0F3Z4j2KG7kZ.jpg" },
+  "spirited-away":          { poster: "/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg", backdrop: "/bSXfU4dwZyBA1vMmXvejdRXBvuF.jpg" },
+  "john-wick":              { poster: "/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg", backdrop: "/umC04Cozevu8nn3ZTIU9rp3Y4jV.jpg" },
+  "prisoners":              { poster: "/jdAsavLqjRDPWHnAMTVfznoMuS1.jpg", backdrop: "/fkFDomFkMfcMUpUYKaEcMGGaJg5.jpg" },
+  "arrival":                { poster: "/x2FJsf1ElAgr63Y3PNPtJrcmpoe.jpg", backdrop: "/rjkmFBvRHSEFxHUQ2cyRuEMUBsO.jpg" },
+  "blade-runner-2049":      { poster: "/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg", backdrop: "/ilRyazdMJwN05exqhwK4tMKBYZs.jpg" },
+  "the-godfather":          { poster: "/3bhkrj58Vtu7enYsLlegkAoz0Nt.jpg", backdrop: "/tmU7GeKVybMWFButWEGl2M4GeiP.jpg" },
+  "pulp-fiction":           { poster: "/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg", backdrop: "/4cDFJr4HnXN5AdPw4AKrmLlMWdO.jpg" },
+  "goodfellas":             { poster: "/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg", backdrop: "/5CxuBFZoFmgF4Qx1xETnxOLkurz.jpg" },
+  "se7en":                  { poster: "/6yoghtyTpznpBik8EngEmJskVnS.jpg", backdrop: "/lbMQDMxe5ZwwHG5BpuQHBMvWpXI.jpg" },
+  "zodiac":                 { poster: "/i8AIBFYrjQFCiZ9MkgZEWNz7p0k.jpg", backdrop: "/hFGC3I7JzQHjnpjqMv9hSr2bxpA.jpg" },
+  "gone-girl":              { poster: "/fSRb7vyIP8rQpL0I47P3qUsEKX3.jpg", backdrop: "/banOOmKC1uM0nCVhPVSPhCJMCbD.jpg" },
+  "mad-max-fury-road":      { poster: "/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg", backdrop: "/phszHPFnhEAGRHxBXToHHBaqFSA.jpg" },
+  "gladiator":              { poster: "/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg", backdrop: "/hND1yIFr8gTAsEMNr2aBKRtUoHY.jpg" },
+  "lord-of-the-rings-fellowship": { poster: "/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg", backdrop: "/pIgcHRqqACFvNF1Q30PksuGBMWV.jpg" },
+  "return-of-the-king":     { poster: "/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg", backdrop: "/lXhgCODAbBXL5buk9yEmTpOoOgR.jpg" },
+  "forrest-gump":           { poster: "/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg", backdrop: "/7c9UVPPiTPltouxRVY6N9uugaVA.jpg" },
+  "the-green-mile":         { poster: "/velWPhVMQeQKcxggNEU8YmU1B8V.jpg", backdrop: "/l6hQWH9eDksNJNiXWYRkWqikOdu.jpg" },
+  "the-social-network":     { poster: "/n0ybibhJtQ5icDqTp8eRytcIHso.jpg", backdrop: "/4Oe4UNHlJEOcw64pzjvF7YIpZQX.jpg" },
+  "the-imitation-game":     { poster: "/zSqJ1qFq8NXFfi7JeIYMlzyR0dx.jpg", backdrop: "/5SFE4sZE0RXGVKOxUt5VUJmqQcc.jpg" },
+  "dunkirk":                { poster: "/ebSnODDg9lbsMIaWg2uAbjn7TO5.jpg", backdrop: "/fudEG1VUWuOqleXv6NwCExK0VLy.jpg" },
+  "1917":                   { poster: "/iZf0KyrE25z1sage4SYFLCCrMi9.jpg", backdrop: "/raHyeODDUMrgv0OeSRNMnCnDLjE.jpg" },
+  "la-la-land":             { poster: "/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg", backdrop: "/nadGENDASIFHGFCeSHBFMGNxHCQ.jpg" },
+  "black-swan":             { poster: "/VuukKLgaCrFkFzH73zUODzHjJB.jpg", backdrop: "/kM4VPJZ1gFTiUyJHBpMtjXCMEXT.jpg" },
+  "shutter-island":         { poster: "/52d9LbojJoLSK6qBBEBcMnFIEkM.jpg", backdrop: "/rgMSFBlyI6E1it5pZaVxIAThDqX.jpg" },
+  "nightcrawler":           { poster: "/vEUpsd9oykreg2D5NQKGNHM3Ykt.jpg", backdrop: "/mMtUybQ6hL24FXo0F3Z4j2KG7kZ.jpg" },
+  "american-psycho":        { poster: "/9uGHEgsiUXjCNq8wdq4r49YL8A1.jpg", backdrop: "/7u3pxc0K1wx32IleAkLv78MKgrw.jpg" },
+  "ex-machina":             { poster: "/btdAt3iEAaQi7jkqOBK7z4K0X9X.jpg", backdrop: "/qOiFlGHPuJ6Ql0uIFVv9Lgu0jxf.jpg" },
+  "her":                    { poster: "/eCOtqtfvn7mxGl6nfmq4C1F7tNb.jpg", backdrop: "/lEIaL12hSkqqe83kgADkbUEEnQn.jpg" },
+  "edge-of-tomorrow":       { poster: "/r0xfcFpJbIJaFCzRtMB4l0HY4I9.jpg", backdrop: "/wXzDKMHjRfJjVsxEkBWnMXRVFyK.jpg" },
+  "logan":                  { poster: "/fnbjcRDYn6YviCcePDnGdyAkYsB.jpg", backdrop: "/4ynQYtSEuU5hyipcGkfD4MoHE5O.jpg" },
+  "guardians-of-the-galaxy":{ poster: "/r7vmZjiyZw9rpJMQJdXpjgiCOk9.jpg", backdrop: "/bHarw8xrmQeqf3t8HpgCnQyRuWS.jpg" },
+  "oldboy":                 { poster: "/pWDtjs568ZfOTMbURQBYuT4Qxka.jpg", backdrop: "/iTvvOGfmqIPvKaFbG2BGXX2Igv4.jpg" },
+  "scarface":               { poster: "/iQ5ztdjvteGeboxtmRdXEChJOHh.jpg", backdrop: "/v6ycuhwDMpBO6SQwKFPkW6VNMWZ.jpg" },
+  "taxi-driver":            { poster: "/ekstpH614fwDX8DUln1a2Opz0N8.jpg", backdrop: "/9T0p9bxFHGTiyfNuXdLuIAfRQeD.jpg" },
+  "braveheart":             { poster: "/or1gBugydmjToAEq7OZY0owwFk.jpg",  backdrop: "/mSmBrQFGCEEqDxCzCF1lpmFMJkr.jpg" },
+  "princess-mononoke":      { poster: "/4TRCzMFB4YOGQpkMDkaiRCMxOHR.jpg", backdrop: "/jHa90hFSAEHiLMTECtnijWFVUdB.jpg" },
+  "howls-moving-castle":    { poster: "/npOnzAbLh6VOIu3naU5QaEcTepo.jpg", backdrop: "/3LoLD9fHeCXMpwwHOMIAWTgfRHi.jpg" },
+  "a-silent-voice":         { poster: "/tuFaiwiqNKIoGzfGFGgBUkFKlDR.jpg", backdrop: "/sHtml5BsU0QmMBeTDUCp1TTDGZM.jpg" },
+  "weathering-with-you":    { poster: "/icvHAODnypAMnDYlBhLxDHkzXPr.jpg", backdrop: "/7bHJkSg3YkdxNwrjAiZbKEvfGMZ.jpg" },
 };
 
 const rawMovies = [
@@ -127,8 +116,8 @@ const rawMovies = [
 
 export const movies = rawMovies.map((movie, index) => ({
   ...movie,
-  image: poster(movie.title, movie.genre, index),
-  banner: banner(movie.title, movie.genre, index),
+  image: `${TMDB_IMG}${tmdbImages[movie.id].poster}`,
+  banner: `${TMDB_BACKDROP}${tmdbImages[movie.id].backdrop}`,
   stats: {
     views: 18000 + index * 1173,
     likes: 3200 + index * 257,
