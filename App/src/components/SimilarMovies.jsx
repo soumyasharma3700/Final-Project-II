@@ -1,5 +1,5 @@
 import MovieCard from "./MovieCard.jsx";
-import { getMoviesByIds } from "../data/movies.js";
+import { getMoviesByIds } from "../data/Movies.js";
 
 function SimilarMovies({ ids }) {
   const similar = getMoviesByIds(ids);

@@ -1,7 +1,7 @@
 import { Navigate, useParams } from "react-router-dom";
 import GenreFilter from "../components/GenreFilter.jsx";
 import MovieGrid from "../components/MovieGrid.jsx";
-import { genres, movies } from "../data/movies.js";
+import { genres, movies } from "../data/Movies.js";
 
 function GenrePage() {
   const { genre } = useParams();

@@ -4,7 +4,7 @@ import SearchBar from "../components/SearchBar.jsx";
 import GenreFilter from "../components/GenreFilter.jsx";
 import MovieGrid from "../components/MovieGrid.jsx";
 import SkeletonGrid from "../components/SkeletonGrid.jsx";
-import { movies } from "../data/movies.js";
+import { movies } from "../data/Movies.js";
 
 function Home() {
   const [query, setQuery] = useState("");

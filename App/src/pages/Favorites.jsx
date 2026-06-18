@@ -2,7 +2,7 @@
 import EmptyState from "../components/EmptyState.jsx";
 import MovieGrid from "../components/MovieGrid.jsx";
 import { useFavorites } from "../context/FavoritesContext.jsx";
-import { movies } from "../data/movies.js";
+import { movies } from "../data/Movies.js";
 
 function Favorites() {
   const { favorites } = useFavorites();

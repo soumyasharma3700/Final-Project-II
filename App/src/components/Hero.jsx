@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Play, Sparkles } from "lucide-react";
-import { movies } from "../data/movies.js";
+import { movies } from "../data/Movies.js";
 
 function Hero() {
   const featured = movies.find((movie) => movie.id === "interstellar") || movies[0];

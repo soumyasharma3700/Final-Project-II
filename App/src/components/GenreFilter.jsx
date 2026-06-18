@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { genres } from "../data/movies.js";
+import { genres } from "../data/Movies.js";
 
 function GenreFilter({ activeGenre = "All" }) {
   return (

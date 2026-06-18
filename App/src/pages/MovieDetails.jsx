@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { Bookmark, Calendar, Clock, Heart, Star, Tags, UserRound } from "lucide-react";
 import SimilarMovies from "../components/SimilarMovies.jsx";
-import { getMovieById } from "../data/movies.js";
+import { getMovieById } from "../data/Movies.js";
 import { useFavorites } from "../context/FavoritesContext.jsx";
 import { useWatchlist } from "../context/WatchlistContext.jsx";
 
